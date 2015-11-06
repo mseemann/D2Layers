@@ -1,0 +1,13 @@
+source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
+
+target 'D2Layers_Example', :exclusive => true do
+  pod "D2Layers", :path => "../"
+end
+
+target 'D2Layers_Tests', :exclusive => true do
+  pod "D2Layers", :path => "../"
+
+  pod 'Quick', '~> 0.3.1'
+  pod 'Nimble'
+end
