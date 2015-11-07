@@ -9,14 +9,14 @@
 Pod::Spec.new do |s|
   s.name             = "D2Layers"
   s.version          = "0.1.0"
-  s.summary          = "A short description of D2Layers."
+  s.summary          = "Data Driven Layers"
 
   s.description      = "abcdef"
 
-  s.homepage         = "https://github.com/<GITHUB_USERNAME>/D2Layers"
+  s.homepage         = "https://github.com/mseemann/D2Layers"
   s.license          = 'MIT'
-  s.author           = { "Michael Seemann" => "seemann@mseemann.de" }
-  s.source           = { :git => "https://github.com/<GITHUB_USERNAME>/D2Layers.git", :tag => s.version.to_s }
+  s.author           = { "Michael Seemann" => "pods@mseemann.de" }
+  s.source           = { :git => "https://github.com/mseemann/D2Layers.git", :tag => s.version.to_s }
 
   s.platform     = :ios, '9.0'
   s.requires_arc = true
