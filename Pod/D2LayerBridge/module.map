@@ -1,0 +1,4 @@
+module D2LayerBridge {
+    header "Bridge.h"
+    export *
+}

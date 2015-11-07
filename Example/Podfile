@@ -7,7 +7,15 @@ end
 
 target 'D2Layers_Tests', :exclusive => true do
   pod "D2Layers", :path => "../"
-
-  pod 'Quick', '~> 0.3.1'
+  
+  pod 'Quick', '~> 0.8.0'
   pod 'Nimble'
 end
+
+
+post_install do |installer|
+    installer.pods_project.build_configuration_list.build_configurations.each do |configuration|
+        configuration.build_settings['SWIFT_INCLUDE_PATHS'] = '$(SRCROOT)/../../Pod/D2LayerBridge'
+    end
+end
+

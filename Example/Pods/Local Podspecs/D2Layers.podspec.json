@@ -1,0 +1,25 @@
+{
+  "name": "D2Layers",
+  "version": "0.1.0",
+  "summary": "A short description of D2Layers.",
+  "description": "abcdef",
+  "homepage": "https://github.com/<GITHUB_USERNAME>/D2Layers",
+  "license": "MIT",
+  "authors": {
+    "Michael Seemann": "seemann@mseemann.de"
+  },
+  "source": {
+    "git": "https://github.com/<GITHUB_USERNAME>/D2Layers.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "9.0"
+  },
+  "requires_arc": true,
+  "source_files": "Pod/Classes/**/*",
+  "resource_bundles": {
+    "D2Layers": [
+      "Pod/Assets/*.png"
+    ]
+  }
+}

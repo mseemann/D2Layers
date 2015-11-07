@@ -1,0 +1,6 @@
+framework module Pods_D2Layers_Example {
+  umbrella header "Pods-D2Layers_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}
