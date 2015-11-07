@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = 'C421420918F04EF944E41236'
+               BlueprintIdentifier = 'A2538BBB3395C138F8C77C8C'
                BlueprintName = 'D2Layers'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'D2Layers.framework'>

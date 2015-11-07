@@ -26,5 +26,5 @@ Pod::Spec.new do |s|
     'D2Layers' => ['Pod/Assets/*.png']
   }
 
-  s.module_map = 'Pod/Classes/module.map'
+  s.module_map = 'Pod/Classes/module.modulemap'
 end
