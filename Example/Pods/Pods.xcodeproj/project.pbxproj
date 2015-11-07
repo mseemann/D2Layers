@@ -350,17 +350,25 @@
 		2025DFB6AD583A9E4F7655745C9175F9 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				2FEAF0B51BEDFD2300EB46AA /* ObjectiveCBridge */,
 				08D22EFE55912F8AC4734D6B6B8667B6 /* Color.swift */,
-				480EFFCB986D1A02FAC40A14219D74B5 /* CustomAnimPieLayer.h */,
-				0CF06E8E06301205B0436FAE596531B9 /* CustomAnimPieLayer.m */,
-				3D3CBB6563161A9EDE75BC36DCCF17C3 /* D2Layers.h */,
-				ACE5260FEE148E9EE5609FF15AD56458 /* D2Layers-umbrella.h */,
 				985718AB6DCED4D0A894A7E0B32F5C59 /* Graph.swift */,
-				267249E5B9AA1BC357351BEB7FEE6670 /* module.modulemap */,
 				305768DA1BC6E8877B21F3B237026DF4 /* OrdinalScale.swift */,
 				7481A7721DD39F511CD43F1E02658CC7 /* PieSliceLayer.swift */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		2FEAF0B51BEDFD2300EB46AA /* ObjectiveCBridge */ = {
+			isa = PBXGroup;
+			children = (
+				480EFFCB986D1A02FAC40A14219D74B5 /* CustomAnimPieLayer.h */,
+				0CF06E8E06301205B0436FAE596531B9 /* CustomAnimPieLayer.m */,
+				3D3CBB6563161A9EDE75BC36DCCF17C3 /* D2Layers.h */,
+				ACE5260FEE148E9EE5609FF15AD56458 /* D2Layers-umbrella.h */,
+				267249E5B9AA1BC357351BEB7FEE6670 /* module.modulemap */,
+			);
+			name = ObjectiveCBridge;
 			sourceTree = "<group>";
 		};
 		32DEB8595A5D9BEC60D9ADDBF80604CD /* Pods-D2Layers_Tests */ = {

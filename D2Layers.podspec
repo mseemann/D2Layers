@@ -8,10 +8,10 @@
 
 Pod::Spec.new do |s|
   s.name             = "D2Layers"
-  s.version          = "0.1.0"
+  s.version          = "0.0.1"
   s.summary          = "Data Driven Layers"
 
-  s.description      = "Data Driven Layers inspired by D3.js"
+  s.description      = "Objective: Data Driven Layers inspired by D3.js - frist release to setup the tool chain"
 
   s.homepage         = "https://github.com/mseemann/D2Layers"
   s.license          = 'MIT'

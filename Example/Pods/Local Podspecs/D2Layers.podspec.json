@@ -1,8 +1,8 @@
 {
   "name": "D2Layers",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "summary": "Data Driven Layers",
-  "description": "Data Driven Layers inspired by D3.js",
+  "description": "Objective: Data Driven Layers inspired by D3.js - frist release to setup the tool chain",
   "homepage": "https://github.com/mseemann/D2Layers",
   "license": "MIT",
   "authors": {
@@ -10,7 +10,7 @@
   },
   "source": {
     "git": "https://github.com/mseemann/D2Layers.git",
-    "tag": "0.1.0"
+    "tag": "0.0.1"
   },
   "platforms": {
     "ios": "9.0"
