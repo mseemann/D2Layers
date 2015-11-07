@@ -1,6 +1,6 @@
 # D2Layers
 
-[![CI Status](http://img.shields.io/travis/Michael Seemann/D2Layers.svg?style=flat)](https://travis-ci.org/Michael Seemann/D2Layers)
+[![CI Status](http://img.shields.io/travis/mseemann/D2Layers.svg?style=flat)](https://travis-ci.org/mseemann/D2Layers)
 [![Version](https://img.shields.io/cocoapods/v/D2Layers.svg?style=flat)](http://cocoapods.org/pods/D2Layers)
 [![License](https://img.shields.io/cocoapods/l/D2Layers.svg?style=flat)](http://cocoapods.org/pods/D2Layers)
 [![Platform](https://img.shields.io/cocoapods/p/D2Layers.svg?style=flat)](http://cocoapods.org/pods/D2Layers)
@@ -22,7 +22,7 @@ pod "D2Layers"
 
 ## Author
 
-Michael Seemann, seemann@mseemann.de
+Michael Seemann, pods@mseemann.de
 
 ## License
 
