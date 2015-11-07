@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import D2LayerBridge
 
 public class PieSliceLayer: CustomAnimPieLayer {
     
