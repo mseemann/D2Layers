@@ -12,6 +12,6 @@
 
 @implementation CustomAnimPieLayer
 
-@dynamic startAngle, endAngle, strokeColor, strokeWidth, fillColor;
+@dynamic startAngle, endAngle;
 
 @end

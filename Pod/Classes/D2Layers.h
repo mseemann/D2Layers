@@ -9,6 +9,7 @@
 #ifndef D2Layers_h
 #define D2Layers_h
 
+#import "CustomAnimLayer.h"
 #import "CustomAnimPieLayer.h"
 
 #endif /* D2Layers_h */

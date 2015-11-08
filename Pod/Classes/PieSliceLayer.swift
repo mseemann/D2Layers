@@ -77,8 +77,14 @@ public class PieSliceLayer: CustomAnimPieLayer {
         let anim = CABasicAnimation(keyPath: key)
         anim.fromValue = self.presentationLayer()?.valueForKey(key)
         anim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
-        anim.duration = 0.7
+        anim.duration = 0.0
         return anim
+    }
+    
+    
+    override public func layoutSublayers() {
+        super.layoutSublayers()
+        self.frame = (superlayer?.bounds)!
     }
 
 }

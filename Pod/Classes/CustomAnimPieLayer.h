@@ -11,15 +11,13 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
+#import "CustomAnimLayer.h"
 
-@interface CustomAnimPieLayer : CALayer
+@interface CustomAnimPieLayer : CustomAnimLayer
 
 
 @property (nonatomic) CGFloat startAngle;
 @property (nonatomic) CGFloat endAngle;
-@property (nonatomic) CGColorRef fillColor;
-@property (nonatomic) CGColorRef strokeColor;
-@property (nonatomic) CGFloat strokeWidth;
 
 
 @end

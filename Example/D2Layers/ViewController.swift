@@ -9,15 +9,33 @@
 import UIKit
 import D2Layers
 
+class D2LayerView: UIView {
+    
+    var root: Graph?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        rootInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        rootInit()
+    }
+    
+    func rootInit() {
+        root = Graph(layer: self.layer, parent: nil)
+    }
+    
+}
 
 class ViewController: UIViewController {
     
-    @IBOutlet weak var vPieChart: UIView!
+    @IBOutlet weak var vPieChart: D2LayerView!
     
     var switcher = false
     
     var pieGroup:Graph?
-    var root:Graph?
     
     var normalizedValues : [Double] = []
     
@@ -71,26 +89,31 @@ class ViewController: UIViewController {
         switcher = !switcher
     }
     
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        root = Graph(layer: vPieChart.layer)
+        vPieChart.root?.circle{
+            (parentGraph: Graph) in
+            
+            let at = CGPoint(x: parentGraph.layer.bounds.size.width/2, y: parentGraph.layer.bounds.size.height/2)
+            let r = min(parentGraph.layer.bounds.width, parentGraph.layer.bounds.size.height)/CGFloat(2.0)
+            return (at:at, r:r)
+            
+        }.fillColor(UIColor(white: 0.85, alpha: 1.0))
         
-        root?.circle(at:CGPoint(x: vPieChart.frame.size.width/2, y: vPieChart.frame.size.height/2), r:vPieChart.frame.size.width/CGFloat(2.0))
-            .fillColor(UIColor(white: 0.85, alpha: 1.0))
-        
-        pieGroup = root?.group()
+        pieGroup = vPieChart.root?.group()
         
         sliceValues = [Int(arc4random_uniform(100)), Int(arc4random_uniform(100)), Int(arc4random_uniform(100)),Int(arc4random_uniform(100)),Int(arc4random_uniform(100))]
     }
+
     
     @IBAction func doit(sender: AnyObject) {
         sliceValues = [Int(arc4random_uniform(100)), Int(arc4random_uniform(100)), Int(arc4random_uniform(100)),Int(arc4random_uniform(100)),Int(arc4random_uniform(100))]
     }
     
-    
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        vPieChart.root?.needsLayout()
     }
 }
 
