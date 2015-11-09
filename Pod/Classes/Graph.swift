@@ -63,7 +63,7 @@ class CircleLayer: CustomAnimLayer {
         
         CGContextBeginPath(ctx)
         CGContextAddPath(ctx, path.CGPath)
-        CGContextEndPage(ctx)
+        CGContextClosePath(ctx)
 
         CGContextDrawPath(ctx, CGPathDrawingMode.FillStroke)
     }
@@ -113,8 +113,13 @@ public class Graph {
     }
     
     public func needsLayout() {
-        layer.setNeedsLayout()
-        layer.setNeedsDisplay()
+        // do not call this on the root layer because this is 
+        // done by the view that contains the root layer
+        if(parent != nil){
+            layer.setNeedsLayout()
+            layer.setNeedsDisplay()
+        }
+        
         for child in childs {
             child.needsLayout()
         }

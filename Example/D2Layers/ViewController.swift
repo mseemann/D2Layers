@@ -24,9 +24,12 @@ class D2LayerView: UIView {
     }
     
     func rootInit() {
-        root = Graph(layer: self.layer, parent: nil)
+       root = Graph(layer: self.layer, parent: nil)
     }
     
+    override func layoutSubviews() {
+        root?.needsLayout()
+    }
 }
 
 class ViewController: UIViewController {
@@ -74,14 +77,13 @@ class ViewController: UIViewController {
         
         var startAngle:CGFloat = 0.0
         
-        
         for (index, n) in normalizedValues.enumerate() {
             let angle:CGFloat = CGFloat(n * 2 * M_PI)
             
             (pieGroup!.get(index) as! PieSlice)
                 .startAngle(startAngle)
                 .endAngle(startAngle + angle)
-                .fillColor(colorScale.scale(index).brighter(switcher ? 1.0 : -1.0))
+                .fillColor(colorScale.scale(index).brighter(switcher ? 1.5 : -1.5))
             
             startAngle += angle
         }
@@ -91,6 +93,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    
         
         vPieChart.root?.circle{
             (parentGraph: Graph) in
@@ -103,6 +106,10 @@ class ViewController: UIViewController {
         
         pieGroup = vPieChart.root?.group()
         
+        // this way? no - with callback and parentlayout pieGroup = vPieChart.root?.createPieLayout(innerRadius:0, outerRadius:20, fromAngle:0, toAngle:2π)
+        
+        //pieGroup.data(sliceValues).onPieSlice(calbback zur Berechnung?)
+        
         sliceValues = [Int(arc4random_uniform(100)), Int(arc4random_uniform(100)), Int(arc4random_uniform(100)),Int(arc4random_uniform(100)),Int(arc4random_uniform(100))]
     }
 
@@ -110,10 +117,6 @@ class ViewController: UIViewController {
     @IBAction func doit(sender: AnyObject) {
         sliceValues = [Int(arc4random_uniform(100)), Int(arc4random_uniform(100)), Int(arc4random_uniform(100)),Int(arc4random_uniform(100)),Int(arc4random_uniform(100))]
     }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        vPieChart.root?.needsLayout()
-    }
+
 }
 
