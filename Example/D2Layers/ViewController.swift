@@ -38,84 +38,60 @@ class ViewController: UIViewController {
     
     var switcher = false
     
-    var pieGroup:Graph?
+    //var pieGroup:Graph?
+    
+    var pieLayout:PieLayout?
     
     var normalizedValues : [Double] = []
     
     let colorScale = OrdinalScale<UIColor>.category10()
     
-    internal var sliceValues: [Int] = [] {
-        didSet {
-            let total = Double(sliceValues.reduce(0, combine: +))
-            
-            normalizedValues = sliceValues.map{Double($0)/total}
-            
-            if pieGroup?.childs.count == 0 {
-                initPieSlices()
-            }
-            drawPieSlices();
-        }
-    }
+    internal var sliceValues: [Int] = []
     
-    func initPieSlices(){
-        
-        
-        for (index, _) in normalizedValues.enumerate() {
-            
-            pieGroup?.pieSlice()
-                .strokeColor(UIColor(white: 0.25, alpha: 1.0))
-                .strokeWidth(0.5)
-                .fillColor(colorScale.scale(index))
-            
-        }
-    }
-    
-    func drawPieSlices() {
-        if pieGroup?.childs.count == 0 {
-            return
-        }
-        
-        var startAngle:CGFloat = 0.0
-        
-        for (index, n) in normalizedValues.enumerate() {
-            let angle:CGFloat = CGFloat(n * 2 * M_PI)
-            
-            (pieGroup!.get(index) as! PieSlice)
-                .startAngle(startAngle)
-                .endAngle(startAngle + angle)
-                .fillColor(colorScale.scale(index).brighter(switcher ? 1.5 : -1.5))
-            
-            startAngle += angle
-        }
-        
-        switcher = !switcher
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
+        sliceValues = [Int(arc4random_uniform(100)), Int(arc4random_uniform(100)), Int(arc4random_uniform(100)),Int(arc4random_uniform(100)),Int(arc4random_uniform(100))]
         
         vPieChart.root?.circle{
             (parentGraph: Graph) in
             
             let at = CGPoint(x: parentGraph.layer.bounds.size.width/2, y: parentGraph.layer.bounds.size.height/2)
             let r = min(parentGraph.layer.bounds.width, parentGraph.layer.bounds.size.height)/CGFloat(2.0)
+            
             return (at:at, r:r)
             
         }.fillColor(UIColor(white: 0.85, alpha: 1.0))
         
-        pieGroup = vPieChart.root?.group()
+
         
-        // this way? no - with callback and parentlayout pieGroup = vPieChart.root?.createPieLayout(innerRadius:0, outerRadius:20, fromAngle:0, toAngle:2π)
-        
-        //pieGroup.data(sliceValues).onPieSlice(calbback zur Berechnung?)
-        
-        sliceValues = [Int(arc4random_uniform(100)), Int(arc4random_uniform(100)), Int(arc4random_uniform(100)),Int(arc4random_uniform(100)),Int(arc4random_uniform(100))]
+        pieLayout = vPieChart.root?.pieLayout{
+            (parentGraph: Graph) in
+            
+            let outerRadius = min(parentGraph.layer.frame.width, parentGraph.layer.frame.height)
+            
+            return (innerRadius:CGFloat(0), outerRadius:outerRadius, startAngle:CGFloat(0), endAngle:CGFloat(2*M_PI))
+        }
+        .data(sliceValues){
+            (pieSlice:PieSlice, normalizedValue:Double, index:Int) in
+            
+                //pieSlice.startAngle(0)
+                //pieSlice.endAngle(0)
+                pieSlice.fillColor(self.colorScale.scale(index))
+                pieSlice.strokeColor(UIColor(white: 0.25, alpha: 1.0))
+                pieSlice.strokeWidth(0.5)
+
+        }
+
+
     }
 
     
     @IBAction func doit(sender: AnyObject) {
         sliceValues = [Int(arc4random_uniform(100)), Int(arc4random_uniform(100)), Int(arc4random_uniform(100)),Int(arc4random_uniform(100)),Int(arc4random_uniform(100))]
+        
+        pieLayout?.data(sliceValues)
     }
 
 }
