@@ -83,6 +83,22 @@ class PieLayoutLayer: CustomAnimLayer {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    override init(layer: AnyObject) {
+        super.init(layer:layer)
+        if let slice = layer as? PieLayoutLayer {
+            self.parent = slice.parent
+            self.layoutDefiniton = slice.layoutDefiniton
+            self.fillColor = slice.fillColor;
+            self.strokeColor = slice.strokeColor;
+            self.strokeWidth = slice.strokeWidth;
+        }
+    }
+    
+    override func layoutSublayers() {
+        super.layoutSublayers()
+        self.frame = (superlayer?.bounds)!
+    }
 }
 
 public class Graph {
@@ -153,6 +169,7 @@ public class Graph {
 public class PieLayout: Graph {
     
     var normalizedValues: [Double]?
+    var pieSliceCallback: ((pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void)?
     
     init(layer: PieLayoutLayer, parent: Graph, layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)) {
         super.init(layer: layer, parent:parent)
@@ -160,21 +177,23 @@ public class PieLayout: Graph {
     
     public func data(values: [NSNumber], pieSliceCallback: (pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void) -> PieLayout {
         normalizedValues = calculateNormalizedValues(values.map{Double($0)});
+        self.pieSliceCallback = pieSliceCallback
         
         var startAngle:CGFloat = 0.0
         
         for (index, n) in normalizedValues!.enumerate() {
             let angle:CGFloat = CGFloat(n * 2 * M_PI)
 
-            let slice = parent!.pieSlice()
-
+            let endAngle = startAngle + angle
+            let slice = self.pieSlice()
+            
             slice
                 .startAngle(startAngle)
-                .endAngle(startAngle + angle)
+                .endAngle(endAngle)
 
             pieSliceCallback(pieSlice: slice, normalizedValue: n, index: index);
             
-            startAngle += angle
+            startAngle = endAngle
         }
         
         return self
@@ -183,7 +202,23 @@ public class PieLayout: Graph {
     public func data(values: [NSNumber]) -> PieLayout {
         normalizedValues = calculateNormalizedValues(values.map{Double($0)});
         
+        var startAngle:CGFloat = 0.0
         // update layers
+        for (index, n) in normalizedValues!.enumerate() {
+            let angle:CGFloat = CGFloat(n * 2 * M_PI)
+            
+                let endAngle = startAngle + angle
+                if let slice = self.childs[index] as? PieSlice {
+                
+                slice
+                    .startAngle(startAngle)
+                    .endAngle(endAngle)
+                if let pieSliceCallback = pieSliceCallback {
+                    pieSliceCallback(pieSlice: slice, normalizedValue: n, index: index);
+                }
+            }
+            startAngle = endAngle
+        }
         
         return self
     }
@@ -217,12 +252,12 @@ public class PieSlice: Graph {
         return self
     }
     
-    public func startAngle(angle:CGFloat) -> PieSlice {
+    func startAngle(angle:CGFloat) -> PieSlice {
         pieSlice.startAngle = angle
         return self
     }
     
-    public func endAngle(angle:CGFloat) -> PieSlice {
+    func endAngle(angle:CGFloat) -> PieSlice {
         pieSlice.endAngle = angle
         return self
     }

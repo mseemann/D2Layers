@@ -38,8 +38,6 @@ class ViewController: UIViewController {
     
     var switcher = false
     
-    //var pieGroup:Graph?
-    
     var pieLayout:PieLayout?
     
     var normalizedValues : [Double] = []
@@ -75,10 +73,7 @@ class ViewController: UIViewController {
         }
         .data(sliceValues){
             (pieSlice:PieSlice, normalizedValue:Double, index:Int) in
-            
-                //pieSlice.startAngle(0)
-                //pieSlice.endAngle(0)
-                pieSlice.fillColor(self.colorScale.scale(index))
+                pieSlice.fillColor(self.colorScale.scale(index).brighter())
                 pieSlice.strokeColor(UIColor(white: 0.25, alpha: 1.0))
                 pieSlice.strokeWidth(0.5)
 
