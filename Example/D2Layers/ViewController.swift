@@ -24,7 +24,7 @@ class D2LayerView: UIView {
     }
     
     func rootInit() {
-       root = Graph(layer: self.layer, parent: nil)
+        root = Graph(layer: self.layer, parent: nil, type:.ROOT)
     }
     
     override func layoutSubviews() {
@@ -84,8 +84,12 @@ class ViewController: UIViewController {
 
     
     @IBAction func doit(sender: AnyObject) {
-        sliceValues = [Int(arc4random_uniform(100)), Int(arc4random_uniform(100)), Int(arc4random_uniform(100)),Int(arc4random_uniform(100)),Int(arc4random_uniform(100))]
+        sliceValues = []
         
+        for(var i=0; i < Int(arc4random_uniform(7) + 1 ); i++) {
+            sliceValues.append(Int(arc4random_uniform(100)))
+        }
+
         pieLayout?.data(sliceValues)
     }
 

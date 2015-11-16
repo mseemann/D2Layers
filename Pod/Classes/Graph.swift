@@ -101,21 +101,40 @@ class PieLayoutLayer: CustomAnimLayer {
     }
 }
 
+public enum GraphChildType {
+    case ROOT
+    case GROUP
+    case CIRCLE
+    case PIE_LAYOUT
+    case PIE_SLICE
+}
+
 public class Graph {
     
     public let layer: CALayer
     public let parent: Graph?
     public var childs:[Graph] = []
+    public var type: GraphChildType
     
-    public init(layer:CALayer, parent: Graph?){
+    public init(layer:CALayer, parent: Graph?, type: GraphChildType){
         self.layer = layer
         self.parent = parent
+        self.type = type
     }
     
     internal func addChild(g:Graph) {
         g.layer.frame = self.layer.bounds
         self.layer.addSublayer(g.layer)
         childs.append(g)
+    }
+    
+    func removeFromParent(){
+        parent!.removeChild(self)
+    }
+    
+    func removeChild(child: Graph){
+        child.layer.removeFromSuperlayer()
+        childs.removeAtIndex(childs.indexOf{$0 === child}!)
     }
     
     public func circle(layoutDefiniton:(parentGraph: Graph) -> (at:CGPoint,r:CGFloat)) -> CircleGraph {
@@ -134,16 +153,9 @@ public class Graph {
         return pieLayout
     }
     
-    public func pieSlice() -> PieSlice {
-        let slice = PieSliceLayer()
-        let p = PieSlice(layer:slice, parent: self)
-        addChild(p)
-        return p
-    }
-    
     public func group() -> Graph {
         let layer = GraphLayer()
-        let g = Graph(layer: layer, parent: self)
+        let g = Graph(layer: layer, parent: self, type: .GROUP)
         addChild(g)
         return g;
     }
@@ -164,6 +176,49 @@ public class Graph {
             child.needsLayout()
         }
     }
+    
+    func selectAll(childType:GraphChildType) -> GraphSelection {
+        let selection = GraphSelection()
+        
+        for child in childs {
+            if child.type == childType {
+                selection.add(child)
+            }
+        }
+        
+        return selection
+    }
+}
+
+class GraphSelection {
+    
+    var selectedGraphs:[Graph] = []
+    var askIndexes = Set<Int>()
+    
+    func add(graph:Graph){
+        selectedGraphs.append(graph)
+    }
+    
+    func hasIndex(i:Int) -> Bool {
+        askIndexes.insert(i)
+        return i < selectedGraphs.count
+    }
+    
+    func get(i:Int) -> Graph {
+        return selectedGraphs[i]
+    }
+    
+    func getUnAskedGraphs() -> [Graph] {
+        var result: [Graph] = []
+        
+        for (index, g) in selectedGraphs.enumerate() {
+            if !askIndexes.contains(index){
+                result.append(g)
+            }
+        }
+        
+        return result
+    }
 }
 
 public class PieLayout: Graph {
@@ -172,54 +227,57 @@ public class PieLayout: Graph {
     var pieSliceCallback: ((pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void)?
     
     init(layer: PieLayoutLayer, parent: Graph, layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)) {
-        super.init(layer: layer, parent:parent)
+        super.init(layer: layer, parent:parent, type: .PIE_LAYOUT)
     }
     
-    public func data(values: [NSNumber], pieSliceCallback: (pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void) -> PieLayout {
-        normalizedValues = calculateNormalizedValues(values.map{Double($0)});
-        self.pieSliceCallback = pieSliceCallback
-        
+    public func pieSlice() -> PieSlice {
+        let slice = PieSliceLayer()
+        let p = PieSlice(layer:slice, parent: self)
+        addChild(p)
+        return p
+    }
+    
+    func calculateSlices() {
         var startAngle:CGFloat = 0.0
+        
+        let slices = self.selectAll(GraphChildType.PIE_SLICE)
         
         for (index, n) in normalizedValues!.enumerate() {
             let angle:CGFloat = CGFloat(n * 2 * M_PI)
-
+            
             let endAngle = startAngle + angle
-            let slice = self.pieSlice()
+            
+            // add or update
+            let slice = slices.hasIndex(index) ? slices.get(index) as! PieSlice : self.pieSlice()
             
             slice
                 .startAngle(startAngle)
                 .endAngle(endAngle)
-
-            pieSliceCallback(pieSlice: slice, normalizedValue: n, index: index);
+            
+            if let pieSliceCallback = pieSliceCallback {
+                pieSliceCallback(pieSlice: slice, normalizedValue: n, index: index);
+            }
             
             startAngle = endAngle
         }
         
+        // remove unused pieslices
+        let removedSlices:[Graph] = slices.getUnAskedGraphs()
+        for slice in removedSlices {
+            slice.removeFromParent()
+        }
+    }
+    
+    public func data(values: [NSNumber], pieSliceCallback: (pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void) -> PieLayout {
+        self.normalizedValues = calculateNormalizedValues(values.map{Double($0)});
+        self.pieSliceCallback = pieSliceCallback
+        calculateSlices()
         return self
     }
     
     public func data(values: [NSNumber]) -> PieLayout {
         normalizedValues = calculateNormalizedValues(values.map{Double($0)});
-        
-        var startAngle:CGFloat = 0.0
-        // update layers
-        for (index, n) in normalizedValues!.enumerate() {
-            let angle:CGFloat = CGFloat(n * 2 * M_PI)
-            
-                let endAngle = startAngle + angle
-                if let slice = self.childs[index] as? PieSlice {
-                
-                slice
-                    .startAngle(startAngle)
-                    .endAngle(endAngle)
-                if let pieSliceCallback = pieSliceCallback {
-                    pieSliceCallback(pieSlice: slice, normalizedValue: n, index: index);
-                }
-            }
-            startAngle = endAngle
-        }
-        
+        calculateSlices()
         return self
     }
     
@@ -234,7 +292,7 @@ public class PieSlice: Graph {
     
     init(layer: PieSliceLayer, parent: Graph) {
         self.pieSlice = layer
-        super.init(layer: layer, parent:parent)
+        super.init(layer: layer, parent:parent, type: .PIE_SLICE)
     }
     
     public func strokeColor(color:UIColor) -> PieSlice {
@@ -269,7 +327,7 @@ public class CircleGraph: Graph {
     
     init(layer: CircleLayer, parent: Graph) {
         self.shapelayer = layer
-        super.init(layer: layer, parent:parent)
+        super.init(layer: layer, parent:parent, type: .CIRCLE)
     }
     
     public func fillColor(color:UIColor) -> CircleGraph {
