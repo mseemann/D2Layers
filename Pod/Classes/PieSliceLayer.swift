@@ -87,7 +87,7 @@ public class PieSliceLayer: CustomAnimPieLayer {
         let anim = CABasicAnimation(keyPath: key)
         anim.fromValue = self.presentationLayer()?.valueForKey(key)
         anim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
-        anim.duration = 0.0
+        anim.duration = 0.3
         return anim
     }
     

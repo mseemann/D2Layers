@@ -64,14 +64,14 @@ class ViewController: UIViewController {
             
             return (at:at, r:r)
             
-            }.fillColor(UIColor(white: 0.85, alpha: 0.0))
+            }.fillColor(colorScale.scale(0).darker())
         
         
         
         pieLayout = vPieChart.root?.pieLayout{
             (parentGraph: Graph) in
             
-                let outerRadius = min(parentGraph.layer.bounds.width, parentGraph.layer.bounds.height)/2.1
+                let outerRadius = (min(parentGraph.layer.bounds.width, parentGraph.layer.bounds.height)/2) - 2
             
             return (innerRadius:outerRadius*0.75, outerRadius:outerRadius, startAngle:CGFloat(0), endAngle:CGFloat(2*M_PI))
             }
@@ -89,18 +89,20 @@ class ViewController: UIViewController {
     @IBAction func doit(sender: AnyObject) {
         sliceValues = []
         
-        for(var i=0; i < Int(arc4random_uniform(10)+1) ; i++) {
+        for(var i=0; i < 7; i++) {
             sliceValues.append(Int(arc4random_uniform(100)))
         }
 
         pieLayout?.data(sliceValues)
         
+        let scale = (1.0 - CGFloat(arc4random_uniform(175))/255.0)
+        
         let selection = pieLayout?.selectAll(.PIE_SLICE)
         for g in (selection!.all() as? [PieSlice])! {
-            g.innerRadius((1.0 - CGFloat(arc4random_uniform(128))/255.0) * g.outerRadius())
+            g.innerRadius(scale * g.outerRadius())
         }
         
     }
-
+    
 }
 

@@ -244,37 +244,41 @@ public class PieLayout: Graph {
     }
     
     func calculateSlices() {
-        let layoutDef = layoutDefiniton(parentGraph: parent!)!
+        if let normalizedValues = normalizedValues {
         
-        var startAngle:CGFloat = 0.0
-        
-        let slices = self.selectAll(GraphChildType.PIE_SLICE)
-        
-        for (index, n) in normalizedValues!.enumerate() {
-            let angle:CGFloat = CGFloat(n * 2 * M_PI)
+            let layoutDef = layoutDefiniton(parentGraph: parent!)!
             
-            let endAngle = startAngle + angle
+            var startAngle:CGFloat = 0.0
             
-            // add or update
-            let slice = slices.hasIndex(index) ? slices.get(index) as! PieSlice : self.pieSlice()
+            let slices = self.selectAll(GraphChildType.PIE_SLICE)
             
-            slice
-                .startAngle(startAngle)
-                .endAngle(endAngle)
-                .innerRadius(layoutDef.innerRadius)
-                .outerRadius(layoutDef.outerRadius)
-            
-            if let pieSliceCallback = pieSliceCallback {
-                pieSliceCallback(pieSlice: slice, normalizedValue: n, index: index);
+            for (index, n) in normalizedValues.enumerate() {
+                let angle:CGFloat = CGFloat(n * 2 * M_PI)
+                
+                let endAngle = startAngle + angle
+                
+                // add or update
+                let slice = slices.hasIndex(index) ? slices.get(index) as! PieSlice : self.pieSlice()
+                
+                slice
+                    .startAngle(startAngle)
+                    .endAngle(endAngle)
+                    .innerRadius(layoutDef.innerRadius)
+                    .outerRadius(layoutDef.outerRadius)
+                
+                if let pieSliceCallback = pieSliceCallback {
+                    pieSliceCallback(pieSlice: slice, normalizedValue: n, index: index);
+                }
+                
+                startAngle = endAngle
             }
             
-            startAngle = endAngle
-        }
-        
-        // remove unused pieslices
-        let removedSlices:[Graph] = slices.getUnAskedGraphs()
-        for slice in removedSlices {
-            slice.removeFromParent()
+            // remove unused pieslices
+            let removedSlices:[Graph] = slices.getUnAskedGraphs()
+            for slice in removedSlices {
+                slice.removeFromParent()
+            }
+            
         }
     }
     
@@ -294,6 +298,11 @@ public class PieLayout: Graph {
     internal func calculateNormalizedValues (values: [Double]) -> [Double]{
         let total = Double(values.reduce(0, combine: +))
         return values.map{Double($0)/total}
+    }
+    
+    public override func needsLayout() {
+        calculateSlices()
+        super.needsLayout()
     }
 }
 
