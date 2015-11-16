@@ -229,7 +229,7 @@ public class PieLayout: Graph {
     
     var normalizedValues: [Double]?
     var pieSliceCallback: ((pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void)?
-    var layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)?
+    var layoutDefiniton: ((parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat))?
     
     init(layer: PieLayoutLayer, parent: Graph, layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)) {
         self.layoutDefiniton = layoutDefiniton
@@ -246,7 +246,7 @@ public class PieLayout: Graph {
     func calculateSlices() {
         if let normalizedValues = normalizedValues {
         
-            let layoutDef = layoutDefiniton(parentGraph: parent!)!
+            let layoutDef = layoutDefiniton!(parentGraph: parent!)
             
             var startAngle:CGFloat = 0.0
             
