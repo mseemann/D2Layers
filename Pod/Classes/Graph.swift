@@ -177,7 +177,7 @@ public class Graph {
         }
     }
     
-    func selectAll(childType:GraphChildType) -> GraphSelection {
+    public func selectAll(childType:GraphChildType) -> GraphSelection {
         let selection = GraphSelection()
         
         for child in childs {
@@ -190,7 +190,7 @@ public class Graph {
     }
 }
 
-class GraphSelection {
+public class GraphSelection {
     
     var selectedGraphs:[Graph] = []
     var askIndexes = Set<Int>()
@@ -219,14 +219,20 @@ class GraphSelection {
         
         return result
     }
+    
+    public func all() -> [Graph]{
+        return selectedGraphs
+    }
 }
 
 public class PieLayout: Graph {
     
     var normalizedValues: [Double]?
     var pieSliceCallback: ((pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void)?
+    var layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)?
     
     init(layer: PieLayoutLayer, parent: Graph, layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)) {
+        self.layoutDefiniton = layoutDefiniton
         super.init(layer: layer, parent:parent, type: .PIE_LAYOUT)
     }
     
@@ -238,6 +244,8 @@ public class PieLayout: Graph {
     }
     
     func calculateSlices() {
+        let layoutDef = layoutDefiniton(parentGraph: parent!)!
+        
         var startAngle:CGFloat = 0.0
         
         let slices = self.selectAll(GraphChildType.PIE_SLICE)
@@ -253,6 +261,8 @@ public class PieLayout: Graph {
             slice
                 .startAngle(startAngle)
                 .endAngle(endAngle)
+                .innerRadius(layoutDef.innerRadius)
+                .outerRadius(layoutDef.outerRadius)
             
             if let pieSliceCallback = pieSliceCallback {
                 pieSliceCallback(pieSlice: slice, normalizedValue: n, index: index);
@@ -310,14 +320,28 @@ public class PieSlice: Graph {
         return self
     }
     
-    func startAngle(angle:CGFloat) -> PieSlice {
+    public func startAngle(angle:CGFloat) -> PieSlice {
         pieSlice.startAngle = angle
         return self
     }
     
-    func endAngle(angle:CGFloat) -> PieSlice {
+    public func endAngle(angle:CGFloat) -> PieSlice {
         pieSlice.endAngle = angle
         return self
+    }
+    
+    public func innerRadius(r:CGFloat) -> PieSlice {
+        pieSlice.innerRadius = r
+        return self
+    }
+
+    public func outerRadius(r:CGFloat) -> PieSlice {
+        pieSlice.outerRadius = r
+        return self
+    }
+    
+    public func outerRadius() -> CGFloat {
+        return pieSlice.outerRadius
     }
 }
 

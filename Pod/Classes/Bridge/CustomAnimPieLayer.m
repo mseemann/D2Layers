@@ -12,6 +12,6 @@
 
 @implementation CustomAnimPieLayer
 
-@dynamic startAngle, endAngle;
+@dynamic startAngle, endAngle, innerRadius, outerRadius;
 
 @end

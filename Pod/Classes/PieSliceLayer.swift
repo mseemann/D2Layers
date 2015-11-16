@@ -10,7 +10,7 @@ import Foundation
 
 public class PieSliceLayer: CustomAnimPieLayer {
     
-    private static let animProps = ["startAngle", "endAngle", "fillColor", "strokeColor", "strokeWidth"]
+    private static let animProps = ["startAngle", "endAngle", "innerRadius", "outerRadius", "fillColor", "strokeColor", "strokeWidth"]
     
     public override init() {
         super.init()
@@ -30,6 +30,8 @@ public class PieSliceLayer: CustomAnimPieLayer {
             self.startAngle = slice.startAngle;
             self.endAngle = slice.endAngle;
             self.fillColor = slice.fillColor;
+            self.innerRadius = slice.innerRadius;
+            self.outerRadius = slice.outerRadius;
             
             self.strokeColor = slice.strokeColor;
             self.strokeWidth = slice.strokeWidth;
@@ -52,11 +54,15 @@ public class PieSliceLayer: CustomAnimPieLayer {
     }
     
     override public func drawInContext(ctx: CGContext) {
-        let center = CGPoint(x:self.bounds.size.width/2, y:self.bounds.size.height/2)
-        let radius:Float = min(Float(center.x), Float(center.y))
+        let center      = CGPoint(x:self.bounds.size.width/2, y:self.bounds.size.height/2)
+        let radius      = Float(outerRadius)
+        let iRadius     = Float(innerRadius)
         
         CGContextBeginPath(ctx)
-        CGContextMoveToPoint(ctx, center.x, center.y)
+        
+        
+        let p0 = CGPoint(x:CGFloat(Float(center.x) + iRadius * cosf(Float(startAngle))), y:CGFloat(Float(center.y) + iRadius * sinf(Float(startAngle))))
+        CGContextMoveToPoint(ctx, p0.x, p0.y)
         
         let p1 = CGPoint(x:CGFloat(Float(center.x) + radius * cosf(Float(startAngle))), y:CGFloat(Float(center.y) + radius * sinf(Float(startAngle))))
         CGContextAddLineToPoint(ctx, p1.x, p1.y)
@@ -64,7 +70,11 @@ public class PieSliceLayer: CustomAnimPieLayer {
         let clockwise = self.startAngle > self.endAngle ? 1 : 0
         CGContextAddArc(ctx, center.x, center.y, CGFloat(radius), CGFloat(startAngle), CGFloat(endAngle), Int32(clockwise))
         
-        CGContextClosePath(ctx)
+        let p3 = CGPoint(x:CGFloat(Float(center.x) + iRadius * cosf(Float(endAngle))), y:CGFloat(Float(center.y) + iRadius * sinf(Float(endAngle))))
+        CGContextAddLineToPoint(ctx, p3.x, p3.y)
+        
+        CGContextAddArc(ctx, center.x, center.y, CGFloat(iRadius), CGFloat(endAngle), CGFloat(startAngle), Int32(clockwise == 0 ? 1: 0))
+    
         
         CGContextSetFillColorWithColor(ctx, fillColor)
         CGContextSetStrokeColorWithColor(ctx, strokeColor)

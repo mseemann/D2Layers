@@ -18,6 +18,8 @@
 
 @property (nonatomic) CGFloat startAngle;
 @property (nonatomic) CGFloat endAngle;
+@property (nonatomic) CGFloat innerRadius;
+@property (nonatomic) CGFloat outerRadius;
 
 
 @end
