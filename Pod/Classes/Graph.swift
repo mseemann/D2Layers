@@ -101,25 +101,27 @@ class PieLayoutLayer: CustomAnimLayer {
     }
 }
 
-public enum GraphChildType {
-    case ROOT
-    case GROUP
-    case CIRCLE
-    case PIE_LAYOUT
-    case PIE_SLICE
-}
+
+// TODO save Key and Data at the graph or at the layer?
 
 public class Graph {
     
     public let layer: CALayer
     public let parent: Graph?
     public var childs:[Graph] = []
-    public var type: GraphChildType
     
-    public init(layer:CALayer, parent: Graph?, type: GraphChildType){
+    public var backgroundColor:CGColorRef? {
+        get {
+            return layer.backgroundColor
+        }
+        set {
+            layer.backgroundColor = newValue
+        }
+    }
+    
+    public init(layer:CALayer, parent: Graph?){
         self.layer = layer
         self.parent = parent
-        self.type = type
     }
     
     internal func addChild(g:Graph) {
@@ -155,7 +157,7 @@ public class Graph {
     
     public func group() -> Graph {
         let layer = GraphLayer()
-        let g = Graph(layer: layer, parent: self, type: .GROUP)
+        let g = Graph(layer: layer, parent: self)
         addChild(g)
         return g;
     }
@@ -177,41 +179,54 @@ public class Graph {
         }
     }
     
-    public func selectAll(childType:GraphChildType) -> GraphSelection {
-        let selection = GraphSelection()
+    /**
+        typeToSelect is generally not really needed - but it looks more natural if you specify what you want in the function parameter and not as the result type of the funciton :)
+    */
+    public func selectAll<T:Graph>(typeToSelect:T.Type, deep:Bool = false) -> D2LayerSelection<T> {
+        let selection = D2LayerSelection<T>()
         
         for child in childs {
-            if child.type == childType {
-                selection.add(child)
+            if child is T {
+                selection.add(child as! T)
+            }
+            if deep {
+                let subSelection = child.selectAll(typeToSelect, deep:deep)
+                selection.add(subSelection)
             }
         }
         
         return selection
+        
     }
 }
 
-public class GraphSelection {
+public class D2LayerSelection<T> {
     
-    var selectedGraphs:[Graph] = []
+    var selected:[T] = []
     var askIndexes = Set<Int>()
     
-    func add(graph:Graph){
-        selectedGraphs.append(graph)
+    func add(graph:T){
+        selected.append(graph)
     }
+    
+    func add(selection: D2LayerSelection<T>) {
+        selected.appendContentsOf(selection.all())
+    }
+    
     
     func hasIndex(i:Int) -> Bool {
         askIndexes.insert(i)
-        return i < selectedGraphs.count
+        return i < selected.count
     }
     
-    func get(i:Int) -> Graph {
-        return selectedGraphs[i]
+    func get(i:Int) -> T {
+        return selected[i]
     }
     
-    func getUnAskedGraphs() -> [Graph] {
-        var result: [Graph] = []
+    func getUnAskedGraphs() -> [T] {
+        var result: [T] = []
         
-        for (index, g) in selectedGraphs.enumerate() {
+        for (index, g) in selected.enumerate() {
             if !askIndexes.contains(index){
                 result.append(g)
             }
@@ -220,10 +235,11 @@ public class GraphSelection {
         return result
     }
     
-    public func all() -> [Graph]{
-        return selectedGraphs
+    public func all() -> [T]{
+        return selected
     }
 }
+
 
 public class PieLayout: Graph {
     
@@ -233,7 +249,7 @@ public class PieLayout: Graph {
     
     init(layer: PieLayoutLayer, parent: Graph, layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)) {
         self.layoutDefiniton = layoutDefiniton
-        super.init(layer: layer, parent:parent, type: .PIE_LAYOUT)
+        super.init(layer: layer, parent:parent)
     }
     
     public func pieSlice() -> PieSlice {
@@ -250,7 +266,7 @@ public class PieLayout: Graph {
             
             var startAngle:CGFloat = 0.0
             
-            let slices = self.selectAll(GraphChildType.PIE_SLICE)
+            let slices = self.selectAll(PieSlice.self)
             
             for (index, n) in normalizedValues.enumerate() {
                 let angle:CGFloat = CGFloat(n * 2 * M_PI)
@@ -258,7 +274,7 @@ public class PieLayout: Graph {
                 let endAngle = startAngle + angle
                 
                 // add or update
-                let slice = slices.hasIndex(index) ? slices.get(index) as! PieSlice : self.pieSlice()
+                let slice = slices.hasIndex(index) ? slices.get(index) : self.pieSlice()
                 
                 slice
                     .startAngle(startAngle)
@@ -311,7 +327,7 @@ public class PieSlice: Graph {
     
     init(layer: PieSliceLayer, parent: Graph) {
         self.pieSlice = layer
-        super.init(layer: layer, parent:parent, type: .PIE_SLICE)
+        super.init(layer: layer, parent:parent)
     }
     
     public func strokeColor(color:UIColor) -> PieSlice {
@@ -360,7 +376,7 @@ public class CircleGraph: Graph {
     
     init(layer: CircleLayer, parent: Graph) {
         self.shapelayer = layer
-        super.init(layer: layer, parent:parent, type: .CIRCLE)
+        super.init(layer: layer, parent:parent)
     }
     
     public func fillColor(color:UIColor) -> CircleGraph {

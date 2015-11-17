@@ -24,7 +24,7 @@ class D2LayerView: UIView {
     }
     
     func rootInit() {
-        root = Graph(layer: self.layer, parent: nil, type:.ROOT)
+        root = Graph(layer: self.layer, parent: nil)
     }
     
     override func layoutSubviews() {
@@ -59,21 +59,23 @@ class ViewController: UIViewController {
         vPieChart.root?.circle{
             (parentGraph: Graph) in
             
-                let at = CGPoint(x: parentGraph.layer.bounds.size.width/2, y: parentGraph.layer.bounds.size.height/2)
-                let r = min(parentGraph.layer.bounds.width, parentGraph.layer.bounds.size.height)/CGFloat(2.0)
+                let parentSize = parentGraph.layer.bounds.size
             
-            return (at:at, r:r)
+                let at = CGPoint(x: parentSize.width/2, y: parentSize.height/2)
+                let r = min(parentSize.width, parentSize.height)/CGFloat(2.0)
             
-            }.fillColor(colorScale.scale(0).darker())
+                return (at:at, r:r)
+            
+            }.fillColor(UIColor.whiteColor())
         
         
         
         pieLayout = vPieChart.root?.pieLayout{
             (parentGraph: Graph) in
             
-                let outerRadius = (min(parentGraph.layer.bounds.width, parentGraph.layer.bounds.height)/2) - 2
+                let outerRadius = (min(parentGraph.layer.bounds.width, parentGraph.layer.bounds.height)/2) - 1
             
-            return (innerRadius:outerRadius*0.75, outerRadius:outerRadius, startAngle:CGFloat(0), endAngle:CGFloat(2*M_PI))
+                return (innerRadius:outerRadius*0.75, outerRadius:outerRadius, startAngle:CGFloat(0), endAngle:CGFloat(2*M_PI))
             }
             .data(sliceValues){
                 (pieSlice:PieSlice, normalizedValue:Double, index:Int) in
@@ -87,21 +89,25 @@ class ViewController: UIViewController {
 
     
     @IBAction func doit(sender: AnyObject) {
-        sliceValues = []
         
-        for(var i=0; i < 7; i++) {
-            sliceValues.append(Int(arc4random_uniform(100)))
-        }
 
-        pieLayout?.data(sliceValues)
-        
-        let scale = (1.0 - CGFloat(arc4random_uniform(175))/255.0)
-        
-        let selection = pieLayout?.selectAll(.PIE_SLICE)
-        for g in (selection!.all() as? [PieSlice])! {
-            g.innerRadius(scale * g.outerRadius())
+        if let pieLayout = pieLayout {
+            sliceValues = []
+            
+            for(var i=0; i < 7; i++) {
+                sliceValues.append(Int(arc4random_uniform(100)))
+            }
+
+            pieLayout.data(sliceValues)
+            
+            let scale = (1.0 - CGFloat(arc4random_uniform(175))/255.0)
+            
+            let selection = pieLayout.selectAll(PieSlice.self)
+            
+            for g in selection.all() {
+                g.innerRadius(scale * g.outerRadius())
+            }
         }
-        
     }
     
 }
