@@ -28,6 +28,10 @@ class CircleLayer: CustomAnimLayer {
         self.layoutDefiniton = layoutDefiniton
         self.parent = parent
         super.init()
+//        self.shadowRadius = 10.0
+//        self.shadowOffset = CGSize(width: 0, height: 0)
+//        self.shadowColor = UIColor.grayColor().CGColor
+//        self.shadowOpacity = 1.0
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -122,6 +126,7 @@ public class Graph {
     public init(layer:CALayer, parent: Graph?){
         self.layer = layer
         self.parent = parent
+        self.layer.contentsScale = UIScreen.mainScreen().scale;
     }
     
     internal func addChild(g:Graph) {
@@ -148,8 +153,7 @@ public class Graph {
     }
     
     public func pieLayout(layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)) -> PieLayout {
-        let layer = PieLayoutLayer(layoutDefiniton: layoutDefiniton, parent:self)
-        let pieLayout = PieLayout(layer: layer, parent: self, layoutDefiniton: layoutDefiniton)
+        let pieLayout = PieLayout(parent: self, layoutDefiniton: layoutDefiniton)
         addChild(pieLayout)
         pieLayout.needsLayout()
         return pieLayout
@@ -243,18 +247,18 @@ public class D2LayerSelection<T> {
 
 public class PieLayout: Graph {
     
+    var layoutDefiniton: ((parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat))?
     var normalizedValues: [Double]?
     var pieSliceCallback: ((pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void)?
-    var layoutDefiniton: ((parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat))?
     
-    init(layer: PieLayoutLayer, parent: Graph, layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)) {
+    init(parent: Graph, layoutDefiniton:(parentGraph: Graph) -> (innerRadius:CGFloat,outerRadius:CGFloat, startAngle:CGFloat, endAngle:CGFloat)) {
+        let layer = PieLayoutLayer(layoutDefiniton: layoutDefiniton, parent:parent)
         self.layoutDefiniton = layoutDefiniton
         super.init(layer: layer, parent:parent)
     }
     
     public func pieSlice() -> PieSlice {
-        let slice = PieSliceLayer()
-        let p = PieSlice(layer:slice, parent: self)
+        let p = PieSlice(parent: self)
         addChild(p)
         return p
     }
@@ -304,15 +308,15 @@ public class PieLayout: Graph {
         }
     }
     
-    public func data(values: [NSNumber], pieSliceCallback: (pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void) -> PieLayout {
-        self.normalizedValues = calculateNormalizedValues(values.map{Double($0)});
+    public func data(values: [Double], pieSliceCallback: (pieSlice:PieSlice, normalizedValue:Double, index:Int) -> Void) -> PieLayout {
+        self.normalizedValues = calculateNormalizedValues(values);
         self.pieSliceCallback = pieSliceCallback
         calculateSlices()
         return self
     }
     
-    public func data(values: [NSNumber]) -> PieLayout {
-        normalizedValues = calculateNormalizedValues(values.map{Double($0)});
+    public func data(values: [Double]) -> PieLayout {
+        normalizedValues = calculateNormalizedValues(values);
         calculateSlices()
         return self
     }
@@ -331,9 +335,9 @@ public class PieLayout: Graph {
 public class PieSlice: Graph {
     let pieSlice:PieSliceLayer
     
-    init(layer: PieSliceLayer, parent: Graph) {
-        self.pieSlice = layer
-        super.init(layer: layer, parent:parent)
+    init(parent: Graph) {
+        self.pieSlice = PieSliceLayer()
+        super.init(layer: pieSlice, parent:parent)
     }
     
     public func strokeColor(color:UIColor) -> PieSlice {
@@ -378,15 +382,15 @@ public class PieSlice: Graph {
 
 public class CircleGraph: Graph {
     
-    let shapelayer: CircleLayer
+    let circleLayer: CircleLayer
     
     init(layer: CircleLayer, parent: Graph) {
-        self.shapelayer = layer
+        self.circleLayer = layer
         super.init(layer: layer, parent:parent)
     }
     
     public func fillColor(color:UIColor) -> CircleGraph {
-        shapelayer.fillColor = color.CGColor
+        circleLayer.fillColor = color.CGColor
         return self
     }
 

@@ -25,6 +25,12 @@ class D2LayerView: UIView {
     
     func rootInit() {
         root = Graph(layer: self.layer, parent: nil)
+        
+//        self.layer.shadowRadius = 10.0
+//        self.layer.shadowOffset = CGSize(width: 0, height: 0)
+//        self.layer.shadowColor = UIColor.grayColor().CGColor
+//        self.layer.masksToBounds = false
+//        self.layer.shadowOpacity = 1.0
     }
     
     override func layoutSubviews() {
@@ -42,49 +48,50 @@ class ViewController: UIViewController {
     
     var normalizedValues : [Double] = []
     
-    let colorScale = OrdinalScale<UIColor>.category10()
+    let colorScale = OrdinalScale<UIColor>.category20c()
     
-    internal var sliceValues: [Int] = []
+    internal var sliceValues: [Double] = []
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        sliceValues = [Int(arc4random_uniform(100)), Int(arc4random_uniform(100)), Int(arc4random_uniform(100)),Int(arc4random_uniform(100)),Int(arc4random_uniform(100))]
+        sliceValues = [Double(arc4random_uniform(100)), Double(arc4random_uniform(100)), Double(arc4random_uniform(100)),Double(arc4random_uniform(100)),Double(arc4random_uniform(100))]
         
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        vPieChart.root?.circle{
-            (parentGraph: Graph) in
-            
-                let parentSize = parentGraph.layer.bounds.size
-            
-                let at = CGPoint(x: parentSize.width/2, y: parentSize.height/2)
-                let r = min(parentSize.width, parentSize.height)/CGFloat(2.0)
-            
-                return (at:at, r:r)
-            
-            }.fillColor(UIColor.whiteColor())
-        
-        
-        
-        pieLayout = vPieChart.root?.pieLayout{
-            (parentGraph: Graph) in
-            
-                let outerRadius = (min(parentGraph.layer.bounds.width, parentGraph.layer.bounds.height)/2) - 1
-            
-                return (innerRadius:outerRadius*0.75, outerRadius:outerRadius, startAngle:CGFloat(0), endAngle:CGFloat(2*M_PI))
-            }
-            .data(sliceValues){
-                (pieSlice:PieSlice, normalizedValue:Double, index:Int) in
-                pieSlice.fillColor(self.colorScale.scale(index).brighter())
-                pieSlice.strokeColor(UIColor(white: 0.25, alpha: 1.0))
-                pieSlice.strokeWidth(0.25)
+        if let root = vPieChart.root {
+            let circle = root.circle{
+                (parentGraph: Graph) in
                 
+                    let parentSize = parentGraph.layer.bounds.size
+                
+                    let at = CGPoint(x: parentSize.width/2, y: parentSize.height/2)
+                    let r = min(parentSize.width, parentSize.height)/CGFloat(2.0)
+                
+                    return (at:at, r:r)
+                
+                }.fillColor(UIColor.clearColor())
+            
+            
+            
+            pieLayout = circle.pieLayout{
+                (parentGraph: Graph) in
+                
+                    let outerRadius = (min(parentGraph.layer.bounds.width, parentGraph.layer.bounds.height)/2) - 1
+                
+                    return (innerRadius:outerRadius*0.75, outerRadius:outerRadius, startAngle:CGFloat(0), endAngle:CGFloat(2*M_PI))
+                }
+                .data(sliceValues){
+                    (pieSlice:PieSlice, normalizedValue:Double, index:Int) in
+                    pieSlice.fillColor(self.colorScale.scale(index).brighter())
+                    pieSlice.strokeColor(UIColor(white: 0.25, alpha: 1.0))
+                    pieSlice.strokeWidth(0.25)
+                    
+            }
         }
-       
     }
 
     
@@ -95,7 +102,7 @@ class ViewController: UIViewController {
             sliceValues = []
             
             for(var i=0; i < 5; i++) {
-                sliceValues.append(Int(arc4random_uniform(100)))
+                sliceValues.append(Double(arc4random_uniform(100)))
             }
 
             pieLayout.data(sliceValues)

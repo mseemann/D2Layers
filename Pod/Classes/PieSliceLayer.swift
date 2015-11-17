@@ -17,6 +17,13 @@ public class PieSliceLayer: CustomAnimPieLayer {
         self.fillColor = UIColor.grayColor().CGColor
         self.strokeColor = UIColor.blackColor().CGColor
         self.strokeWidth = 1.0
+//
+//        self.shadowRadius = 10.0
+//        self.shadowOffset = CGSize(width: 0, height: 0)
+//        self.shadowColor = UIColor.grayColor().CGColor
+//        self.masksToBounds = false
+//        self.shadowOpacity = 1.0
+        
         self.setNeedsDisplay()
     }
     
@@ -58,8 +65,11 @@ public class PieSliceLayer: CustomAnimPieLayer {
         let radius      = Float(outerRadius)
         let iRadius     = Float(innerRadius)
         
-        CGContextBeginPath(ctx)
+        CGContextSetFillColorWithColor(ctx, fillColor)
+        CGContextSetStrokeColorWithColor(ctx, strokeColor)
+        CGContextSetLineWidth(ctx, CGFloat(strokeWidth))
         
+        CGContextBeginPath(ctx)
         
         let p0 = CGPoint(x:CGFloat(Float(center.x) + iRadius * cosf(Float(startAngle))), y:CGFloat(Float(center.y) + iRadius * sinf(Float(startAngle))))
         CGContextMoveToPoint(ctx, p0.x, p0.y)
@@ -74,11 +84,8 @@ public class PieSliceLayer: CustomAnimPieLayer {
         CGContextAddLineToPoint(ctx, p3.x, p3.y)
         
         CGContextAddArc(ctx, center.x, center.y, CGFloat(iRadius), CGFloat(endAngle), CGFloat(startAngle), Int32(clockwise == 0 ? 1: 0))
-    
-        
-        CGContextSetFillColorWithColor(ctx, fillColor)
-        CGContextSetStrokeColorWithColor(ctx, strokeColor)
-        CGContextSetLineWidth(ctx, CGFloat(strokeWidth))
+
+        CGContextClosePath(ctx)
         
         CGContextDrawPath(ctx, CGPathDrawingMode.FillStroke)
     }
