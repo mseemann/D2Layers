@@ -94,7 +94,7 @@ class ViewController: UIViewController {
         if let pieLayout = pieLayout {
             sliceValues = []
             
-            for(var i=0; i < 7; i++) {
+            for(var i=0; i < 5; i++) {
                 sliceValues.append(Int(arc4random_uniform(100)))
             }
 

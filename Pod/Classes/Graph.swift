@@ -264,14 +264,20 @@ public class PieLayout: Graph {
         
             let layoutDef = layoutDefiniton!(parentGraph: parent!)
             
-            var startAngle:CGFloat = 0.0
+            let overAllStartAngle   = layoutDef.startAngle
+            let overAllEndAngle     = layoutDef.endAngle
+            let range = overAllEndAngle - overAllStartAngle
+            
+            var startAngle:CGFloat = overAllStartAngle
             
             let slices = self.selectAll(PieSlice.self)
             
             for (index, n) in normalizedValues.enumerate() {
                 let angle:CGFloat = CGFloat(n * 2 * M_PI)
                 
-                let endAngle = startAngle + angle
+                let scaleAngle = range/CGFloat(2 * M_PI) * angle
+                
+                let endAngle = startAngle + scaleAngle
                 
                 // add or update
                 let slice = slices.hasIndex(index) ? slices.get(index) : self.pieSlice()
