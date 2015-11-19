@@ -38,6 +38,7 @@ class D2LayerView: UIView {
     }
 }
 
+
 class ViewController: UIViewController {
     
     @IBOutlet weak var vPieChart: D2LayerView!
@@ -50,15 +51,6 @@ class ViewController: UIViewController {
     
     let colorScale = OrdinalScale<UIColor>.category20c()
     
-    internal var sliceValues: [Double] = []
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        sliceValues = [Double(arc4random_uniform(100)), Double(arc4random_uniform(100)), Double(arc4random_uniform(100)),Double(arc4random_uniform(100)),Double(arc4random_uniform(100))]
-        
-    }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -73,7 +65,7 @@ class ViewController: UIViewController {
                 
                     return (at:at, r:r)
                 
-                }.fillColor(UIColor.clearColor())
+                }.fillColor(UIColor.grayColor().brighter())
             
             
             
@@ -84,7 +76,7 @@ class ViewController: UIViewController {
                 
                     return (innerRadius:outerRadius*0.75, outerRadius:outerRadius, startAngle:CGFloat(0), endAngle:CGFloat(2*M_PI))
                 }
-                .data(sliceValues){
+                .data(updateSlices()){
                     (pieSlice:PieSlice, normalizedValue:Double, index:Int) in
                     pieSlice.fillColor(self.colorScale.scale(index).brighter())
                     pieSlice.strokeColor(UIColor(white: 0.25, alpha: 1.0))
@@ -97,15 +89,9 @@ class ViewController: UIViewController {
     
     @IBAction func doit(sender: AnyObject) {
         
-
         if let pieLayout = pieLayout {
-            sliceValues = []
-            
-            for(var i=0; i < 5; i++) {
-                sliceValues.append(Double(arc4random_uniform(100)))
-            }
 
-            pieLayout.data(sliceValues)
+            pieLayout.data(updateSlices())
             
             let scale = (1.0 - CGFloat(arc4random_uniform(175))/255.0)
             
@@ -114,8 +100,17 @@ class ViewController: UIViewController {
             for g in selection.all() {
                 g.innerRadius(scale * g.outerRadius())
             }
+        
         }
     }
     
+
+    internal func updateSlices() -> [Double]{
+        var sliceValues:[Double] = []
+        for(var i=0; i < 7; i++) {
+            sliceValues.append(Double(arc4random_uniform(100)))
+        }
+        return sliceValues
+    }
 }
 

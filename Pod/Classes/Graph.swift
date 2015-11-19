@@ -58,7 +58,6 @@ class CircleLayer: CustomAnimLayer {
         super.drawInContext(ctx)
 
         let def =  layoutDefiniton!(parentGraph: parent!)
-        let path = UIBezierPath(ovalInRect: CGRectMake(def.at.x-def.r, def.at.y-def.r, 2*def.r, 2*def.r))
 
         
         CGContextSetFillColorWithColor(ctx, fillColor)
@@ -66,7 +65,7 @@ class CircleLayer: CustomAnimLayer {
         CGContextSetLineWidth(ctx, CGFloat(strokeWidth))
         
         CGContextBeginPath(ctx)
-        CGContextAddPath(ctx, path.CGPath)
+        CGContextAddEllipseInRect(ctx, CGRectMake(def.at.x-def.r, def.at.y-def.r, 2*def.r, 2*def.r));
         CGContextClosePath(ctx)
 
         CGContextDrawPath(ctx, CGPathDrawingMode.FillStroke)

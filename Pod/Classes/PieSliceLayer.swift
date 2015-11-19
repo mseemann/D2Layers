@@ -98,7 +98,7 @@ public class PieSliceLayer: CustomAnimPieLayer {
         }
         
         anim.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionDefault)
-        anim.duration = 1.5
+        anim.duration = 0.3
         return anim
     }
     
