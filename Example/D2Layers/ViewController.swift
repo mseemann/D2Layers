@@ -51,6 +51,7 @@ class ViewController: UIViewController {
     
     let colorScale = OrdinalScale<UIColor>.category20c()
     
+    var count = 5
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -83,6 +84,7 @@ class ViewController: UIViewController {
                     pieSlice.strokeWidth(0.25)
                     
             }
+
         }
     }
 
@@ -93,7 +95,7 @@ class ViewController: UIViewController {
 
             pieLayout.data(updateSlices())
             
-            let scale = (1.0 - CGFloat(arc4random_uniform(175))/255.0)
+            let scale = (1.0 - CGFloat(arc4random_uniform(128))/255.0)
             
             let selection = pieLayout.selectAll(PieSlice.self)
             
@@ -107,7 +109,7 @@ class ViewController: UIViewController {
 
     internal func updateSlices() -> [Double]{
         var sliceValues:[Double] = []
-        for(var i=0; i < 7; i++) {
+        for(var i=0; i < count; i++) {
             sliceValues.append(Double(arc4random_uniform(100)))
         }
         return sliceValues
