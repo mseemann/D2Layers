@@ -11,15 +11,19 @@ import UIKit
 
 public class OrdinalScale<T> {
     
-    var range:[T] = []
+    private var r:[T] = []
+    
+    public func range() -> [T] {
+        return r
+    }
     
     public func range(range: [T]) -> OrdinalScale<T> {
-        self.range = range
+        self.r = range
         return self
     }
     
     public func scale(i:Int) -> T {
-        return range[i % range.count]
+        return r[i % r.count]
     }
 }
 
@@ -29,7 +33,7 @@ public extension OrdinalScale {
         return OrdinalScale<UIColor>().range(colors.map{UIColor(rgb: $0)});
     }
     
-    static func category10() -> OrdinalScale<UIColor> {
+    public static func category10() -> OrdinalScale<UIColor> {
         return toUIColorScale(Colors.category10)
     }
     

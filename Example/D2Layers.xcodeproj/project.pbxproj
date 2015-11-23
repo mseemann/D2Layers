@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2FAF75211C038027007425C9 /* ColorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAF751F1C036AA7007425C9 /* ColorTest.swift */; };
+		2FAF75221C03802A007425C9 /* ColorScaleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAF751D1C0367D1007425C9 /* ColorScaleTest.swift */; };
 		3D6ED652BE10286CB6CDD85B /* Pods_D2Layers_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54A90ECC14BB2A1AA1C32238 /* Pods_D2Layers_Tests.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		3EE2F7576CCA04E379C81E9D /* Pods_D2Layers_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C024C0A71D7B7785C0B0E95B /* Pods_D2Layers_Example.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -14,7 +16,6 @@
 		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
 		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
-		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +30,8 @@
 
 /* Begin PBXFileReference section */
 		099F5ECF15ABC5CC4770D93E /* D2Layers.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = D2Layers.podspec; path = ../D2Layers.podspec; sourceTree = "<group>"; };
+		2FAF751D1C0367D1007425C9 /* ColorScaleTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorScaleTest.swift; sourceTree = "<group>"; };
+		2FAF751F1C036AA7007425C9 /* ColorTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTest.swift; sourceTree = "<group>"; };
 		54A90ECC14BB2A1AA1C32238 /* Pods_D2Layers_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_D2Layers_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* D2Layers_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = D2Layers_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -39,7 +42,6 @@
 		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		607FACE51AFB9204008FA782 /* D2Layers_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = D2Layers_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		A36A89AC23D17EFDE471C7C9 /* Pods-D2Layers_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-D2Layers_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-D2Layers_Tests/Pods-D2Layers_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		B92C3982877A595E237465AE /* Pods-D2Layers_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-D2Layers_Example.debug.xcconfig"; path = "Pods/Target Support Files/Pods-D2Layers_Example/Pods-D2Layers_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		C024C0A71D7B7785C0B0E95B /* Pods_D2Layers_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_D2Layers_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -115,8 +117,9 @@
 		607FACE81AFB9204008FA782 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				607FACEB1AFB9204008FA782 /* Tests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
+				2FAF751D1C0367D1007425C9 /* ColorScaleTest.swift */,
+				2FAF751F1C036AA7007425C9 /* ColorTest.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -368,7 +371,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
+				2FAF75221C03802A007425C9 /* ColorScaleTest.swift in Sources */,
+				2FAF75211C038027007425C9 /* ColorTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -424,6 +428,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -469,6 +474,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -517,10 +523,7 @@
 			baseConfigurationReference = A36A89AC23D17EFDE471C7C9 /* Pods-D2Layers_Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -538,10 +541,7 @@
 			baseConfigurationReference = ECD484BAFBB11DD5055A18CC /* Pods-D2Layers_Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";

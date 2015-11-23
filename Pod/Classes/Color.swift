@@ -10,6 +10,11 @@ import Foundation
 import UIKit
 
 public extension UIColor {
+    
+    /**
+     Convenience initalizer that creates a uicolor from a 6 digit hex value. 0xff0000 -> red.
+     - Parameter rgb: the rgb hex value
+    */
     convenience init(rgb: UInt32) {
         self.init(
             red:    CGFloat((rgb & 0xFF0000) >> 16) / 255.0,
@@ -19,6 +24,11 @@ public extension UIColor {
         )
     }
     
+    /**
+        Makes a color brighter with the provided gamma value (defaults to 1). every color component is devided by 0.7^gamma. 
+        - Parameter gamma: specifies how brighter the color should be. a greater value results to a brighter color.
+     
+    */
     public func brighter(gamma:Float = 1) -> UIColor {
         
         var red:CGFloat     = 0
@@ -38,6 +48,11 @@ public extension UIColor {
         return UIColor(red: min(1, red/k), green: min(1, green/k), blue: min(1, blue/k), alpha: alpha)
     }
     
+    /**
+     Makes a color darker with the provided gamma value (defaults to 1). every color component is multiplied by 0.7^gamma.
+     - Parameter gamma: specifies how darker the color should be. a greater value results to a darker color.
+     
+     */
     public func darker(gamma:Float = 1) -> UIColor {
         var red:CGFloat     = 0
         var green:CGFloat   = 0
@@ -49,6 +64,21 @@ public extension UIColor {
         let k = CGFloat(pow(0.7, gamma))
     
         return UIColor(red: red*k, green: green*k, blue: blue*k, alpha: alpha)
+    }
+    
+    /**
+     Decompose a UIColor in the red, green and blue component. Evenery component has a value between 0.0 and 1.0.
+     - Returns: a tupel with the red, green and blue component.
+    */
+    public func rgb() -> (red:CGFloat, green:CGFloat, blue:CGFloat) {
+        var red:CGFloat     = 0
+        var green:CGFloat   = 0
+        var blue:CGFloat    = 0
+        var alpha:CGFloat   = 0
+        
+        self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+        
+        return (red, green, blue)
     }
 
 }

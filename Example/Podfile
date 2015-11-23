@@ -12,10 +12,11 @@ target 'D2Layers_Tests', :exclusive => true do
   pod 'Nimble'
 end
 
+link_with 'D2Layers_Example', 'D2Layers_Tests'
 
 post_install do |installer|
     installer.pods_project.build_configuration_list.build_configurations.each do |configuration|
-        configuration.build_settings['SWIFT_INCLUDE_PATHS'] = '$(SRCROOT)/../../Pod/D2LayerBridge'
+        #configuration.build_settings['SWIFT_INCLUDE_PATHS'] = '$(SRCROOT)/../../Pod/D2LayerBridge'
     end
 end
 
