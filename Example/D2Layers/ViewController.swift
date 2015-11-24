@@ -49,7 +49,7 @@ class ViewController: UIViewController {
     
     var normalizedValues : [Double] = []
     
-    let colorScale = OrdinalScale<UIColor>.category20c()
+    let colorScale = OrdinalScale<Int, UIColor>.category20c()
     
     var count = 5
     

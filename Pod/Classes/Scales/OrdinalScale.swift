@@ -9,43 +9,56 @@
 import Foundation
 import UIKit
 
-public class OrdinalScale<T> {
+public class OrdinalScale<Domain:Hashable, Range> {
     
-    private var r:[T] = []
+    private var r:[Range] = []
+    private var d:[Domain] = []
+    private var idx:[Domain:Int] = [:]
     
-    public func range() -> [T] {
+    public func range() -> [Range] {
         return r
     }
     
-    public func range(range: [T]) -> OrdinalScale<T> {
+    public func range(range: [Range]) -> OrdinalScale<Domain, Range> {
         self.r = range
         return self
     }
     
-    public func scale(i:Int) -> T {
-        return r[i % r.count]
+    public func domain() -> [Domain]{
+        return d
+    }
+    
+    public func scale(i:Domain) -> Range {
+        if (idx[i] == nil) {
+            d.append(i)
+            idx[i] = d.count
+        }
+
+        let index = idx[i]! - 1 
+
+        return r[index % r.count]
     }
 }
 
 public extension OrdinalScale {
 
-    internal static func toUIColorScale(colors:[UInt32]) -> OrdinalScale<UIColor> {
-        return OrdinalScale<UIColor>().range(colors.map{UIColor(rgb: $0)});
+    internal static func toUIColorScale(colors:[UInt32]) -> OrdinalScale<Int, UIColor> {
+        return OrdinalScale<Int,UIColor>().range(colors.map{UIColor(rgb: $0)});
     }
     
-    public static func category10() -> OrdinalScale<UIColor> {
+    public static func category10() -> OrdinalScale<Int, UIColor> {
         return toUIColorScale(Colors.category10)
     }
     
-    static func category20() -> OrdinalScale<UIColor> {
+    static func category20() -> OrdinalScale<Int, UIColor> {
         return toUIColorScale(Colors.category20)
     }
     
-    static func category20b() -> OrdinalScale<UIColor> {
+    static func category20b() -> OrdinalScale<Int, UIColor> {
         return toUIColorScale(Colors.category20b)
     }
     
-    static func category20c() -> OrdinalScale<UIColor> {
+    static func category20c() -> OrdinalScale<Int, UIColor> {
         return toUIColorScale(Colors.category20c)
     }
 }
