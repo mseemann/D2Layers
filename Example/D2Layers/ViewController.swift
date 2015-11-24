@@ -79,7 +79,7 @@ class ViewController: UIViewController {
                 }
                 .data(updateSlices()){
                     (pieSlice:PieSlice, normalizedValue:Double, index:Int) in
-                    pieSlice.fillColor(self.colorScale.scale(index).brighter())
+                    pieSlice.fillColor(self.colorScale.scale(index)!.brighter())
                     pieSlice.strokeColor(UIColor(white: 0.25, alpha: 1.0))
                     pieSlice.strokeWidth(0.25)
                     

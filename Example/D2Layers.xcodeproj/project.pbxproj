@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2FAF75211C038027007425C9 /* ColorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAF751F1C036AA7007425C9 /* ColorTest.swift */; };
 		2FAF75221C03802A007425C9 /* ColorScaleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAF751D1C0367D1007425C9 /* ColorScaleTest.swift */; };
+		2FAF75261C049D5E007425C9 /* OrdinalScaleTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FAF75251C049D5E007425C9 /* OrdinalScaleTest.swift */; };
 		3D6ED652BE10286CB6CDD85B /* Pods_D2Layers_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 54A90ECC14BB2A1AA1C32238 /* Pods_D2Layers_Tests.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		3EE2F7576CCA04E379C81E9D /* Pods_D2Layers_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C024C0A71D7B7785C0B0E95B /* Pods_D2Layers_Example.framework */; };
 		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
@@ -33,6 +34,7 @@
 		2FAF751D1C0367D1007425C9 /* ColorScaleTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorScaleTest.swift; sourceTree = "<group>"; };
 		2FAF751F1C036AA7007425C9 /* ColorTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorTest.swift; sourceTree = "<group>"; };
 		2FAF75231C038C08007425C9 /* D2Layers.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = D2Layers.framework; path = "Pods/../build/Debug-iphoneos/D2Layers.framework"; sourceTree = "<group>"; };
+		2FAF75251C049D5E007425C9 /* OrdinalScaleTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrdinalScaleTest.swift; sourceTree = "<group>"; };
 		54A90ECC14BB2A1AA1C32238 /* Pods_D2Layers_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_D2Layers_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD01AFB9204008FA782 /* D2Layers_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = D2Layers_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -121,6 +123,7 @@
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 				2FAF751D1C0367D1007425C9 /* ColorScaleTest.swift */,
 				2FAF751F1C036AA7007425C9 /* ColorTest.swift */,
+				2FAF75251C049D5E007425C9 /* OrdinalScaleTest.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -374,6 +377,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2FAF75221C03802A007425C9 /* ColorScaleTest.swift in Sources */,
+				2FAF75261C049D5E007425C9 /* OrdinalScaleTest.swift in Sources */,
 				2FAF75211C038027007425C9 /* ColorTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
