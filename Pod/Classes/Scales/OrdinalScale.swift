@@ -16,6 +16,7 @@ public enum OrdinalScaleError: ErrorType {
 enum OrdinalScaleRangeType {
     case RANGE
     case RANGE_POINTS
+    case RANGE_ROUND_POINTS
 }
 
 public class OrdinalScale<Domain:Hashable, Range> {
@@ -70,30 +71,58 @@ public class OrdinalScale<Domain:Hashable, Range> {
         }
     }
     
-    internal func steps(start:Double, step:Double) -> [Range] {
-        var result:[Range] = []
+    internal func steps(start:Double, step:Double) -> [Double] {
+        var result:[Double] = []
         
         for var index = 0.0; index < Double(d.count); ++index {
             let rangeValue = start + step * index
-            if let rangeValue = rangeValue as? Range {
-                result.append(rangeValue)
-            }
+            result.append(rangeValue)
         }
-        
+        print(start, step, result)
         return result
     }
     
+    // only usable if Range is a Double
     public func rangePoints(var start start:Double, stop:Double, padding:Double = 0) throws -> OrdinalScale<Domain, Range> {
         rangeType = .RANGE_POINTS
 
         var step = 0.0
-        
         if d.count < 2 {
             start = (start + stop) / 2
         } else {
             step = (stop - start) / (Double(d.count) - 1 + padding)
         }
-        r = steps(start + step * padding / 2.0, step: step)
+        r = steps(start + step * padding / 2.0, step: step).map{print($0); return $0 as! Range}
+        
+        return self
+    }
+    
+    // only usable if Range is a Double - even so the points are at a value with no fractions
+    public func rangeRoundPoints(var start start:Double, var stop:Double, padding:Double = 0) throws -> OrdinalScale<Domain, Range> {
+        rangeType = .RANGE_ROUND_POINTS
+        
+        var inverse = false
+        
+        if start > stop {
+            let tmp = start
+            start = stop
+            stop = tmp
+            inverse = true
+        }
+
+        var step = 0.0
+        if d.count < 2 {
+            start = round((start + stop) / 2)
+            stop = start
+        } else {
+            step = floor((stop - start) / (Double(d.count) - 1.0 + padding))
+        }
+        
+        start = start + round(step * padding / 2.0 + (stop - start - (Double(d.count) - 1 + padding) * step) / 2.0)
+        
+        let theSteps = steps(start, step:step).map{$0 as! Range}
+
+        r = inverse ? theSteps.reverse() : theSteps
         
         return self
     }
