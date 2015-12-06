@@ -236,6 +236,59 @@ class OrdinalScaleSpec: QuickSpec {
                 expect(x.domain()) == ["a", "b", "c"]
             }
         }
+        
+        describe("rangeBands") {
+            it("computes discrete bands in a continuous range") {
+                var x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:0, stop:120)
+                expect(x.range()) ==  [0, 40, 80]
+                expect(x.rangeBand) == 40
+                x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:0, stop:120, padding:0.2, outerPadding:0.2)
+                expect(x.range()) == [7.5, 45, 82.5]
+                expect(x.rangeBand) ==  30
+            }
+    
+// FIXME currently not possible - maybe every range-funktion must be an object to recompute the ranges with the original values.
+//            it("setting domain recomputes range bands") {
+//                let x = try! OrdinalScale<String, Double>().rangeBands(start:0, stop:100).domain(["a", "b", "c"])
+//                expect(x.range()) == [1, 34, 67]
+//                expect(x.rangeBand) == 33
+//                x.domain(["a", "b", "c", "d"])
+//                expect(x.range()) == [0, 25, 50, 75]
+//                expect(x.rangeBand) == 25
+//            }
+            
+            it("can be set to a descending range") {
+                var x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:120, stop:0)
+                expect(x.range()) == [80, 40, 0]
+                expect(x.rangeBand) == 40
+                x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:120, stop:0, padding:0.2, outerPadding:0.2)
+                expect(x.range()) == [82.5, 45, 7.5]
+                expect(x.rangeBand) == 30
+            }
+            
+            it("can specify a different outer padding") {
+                var x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:120, stop:0, padding:0.2, outerPadding:0.1)
+                expect(x.range()) == [84, 44, 4]
+                expect(x.rangeBand) == 32
+                x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:120, stop:0, padding:0.2, outerPadding:1)
+                expect(x.range()) == [75, 50, 25]
+                expect(x.rangeBand) == 20
+            }
+            
+            it("returns undefined for values outside the domain") {
+                let x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:0, stop:1)
+                expect(x.scale("d")).to(beNil())
+                expect(x.scale("e")).to(beNil())
+                expect(x.scale("f")).to(beNil())
+            }
+            
+            it("does not implicitly add values to the domain") {
+                let x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:0, stop:1)
+                x.scale("d")
+                x.scale("e")
+                expect(x.domain()) == ["a", "b", "c"]
+            }
+        }
     }
 }
 
