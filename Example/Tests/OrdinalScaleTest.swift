@@ -119,7 +119,7 @@ class OrdinalScaleSpec: QuickSpec {
             }
             
             it("correctly handles empty domains") {
-                let x = try! OrdinalScale<String, Int>().domain([]).rangePoints(start:0, stop:120)
+                let x = try! OrdinalScale<String, Double>().domain([]).rangePoints(start:0, stop:120)
                 expect(x.range()) == []
                 expect(x.scale("b")).to(beNil())
                 expect(x.domain()) == []
@@ -330,6 +330,24 @@ class OrdinalScaleSpec: QuickSpec {
                 x.scale("d")
                 x.scale("e")
                 expect(x.domain()) == ["a", "b", "c"]
+            }
+        }
+        
+        describe("rangeExtent") {
+            it("returns the continuous range") {
+                var x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangePoints(start:20, stop:120)
+                expect(x.rangeExtent) == [20, 120]
+                x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:10, stop:110)
+                expect(x.rangeExtent) == [10, 110]
+                x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeRoundBands(start:0, stop:100)
+                expect(x.rangeExtent) == [0, 100]
+                x = OrdinalScale<String, Double>().domain(["a", "b", "c"]).range([0, 20, 100])
+                expect(x.rangeExtent) ==  [0, 100]
+            }
+            
+            it("can handle descending ranges") {
+                let x = try! OrdinalScale<String, Double>().domain(["a", "b", "c"]).rangeBands(start:100, stop:0)
+                expect(x.rangeExtent) == [0, 100]
             }
         }
     }

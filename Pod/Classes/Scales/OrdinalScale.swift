@@ -28,6 +28,7 @@ public class OrdinalScale<Domain:Hashable, Range> {
     private var idx:[Domain:Int] = [:]
     private var rangeType = OrdinalScaleRangeType.RANGE
     public var rangeBand:Double = 0
+    public var rangeExtent:[Range] = []
     
     public func range() -> [Range] {
         return r
@@ -35,6 +36,7 @@ public class OrdinalScale<Domain:Hashable, Range> {
     
     public func range(range: [Range]) -> OrdinalScale<Domain, Range> {
         self.r = range
+        self.rangeExtent = [range[0], range[range.count-1]]
         return self
     }
     
@@ -80,13 +82,15 @@ public class OrdinalScale<Domain:Hashable, Range> {
             let rangeValue = start + step * index
             result.append(rangeValue)
         }
-        //print(start, step, result)
+
         return result
     }
     
     // only usable if Range is a Double
     public func rangePoints(var start start:Double, stop:Double, padding:Double = 0) throws -> OrdinalScale<Domain, Range> {
         rangeType = .RANGE_POINTS
+        let reverse = start > stop
+        rangeExtent = ((reverse ? [stop, start] :[start, stop]) as [Double]).map{$0 as! Range}
 
         var step = 0.0
         if d.count < 2 {
@@ -94,7 +98,7 @@ public class OrdinalScale<Domain:Hashable, Range> {
         } else {
             step = (stop - start) / (Double(d.count) - 1 + padding)
         }
-        r = steps(start + step * padding / 2.0, step: step).map{print($0); return $0 as! Range}
+        r = steps(start + step * padding / 2.0, step: step).map{$0 as! Range}
         
         return self
     }
@@ -103,14 +107,16 @@ public class OrdinalScale<Domain:Hashable, Range> {
     public func rangeRoundPoints(var start start:Double, var stop:Double, padding:Double = 0) throws -> OrdinalScale<Domain, Range> {
         rangeType = .RANGE_ROUND_POINTS
         
-        var inverse = false
+        var reverse = false
         
         if start > stop {
             let tmp = start
             start = stop
             stop = tmp
-            inverse = true
+            reverse = true
         }
+        
+        rangeExtent = ([start, stop] as [Double]).map{$0 as! Range}
 
         var step = 0.0
         if d.count < 2 {
@@ -124,7 +130,7 @@ public class OrdinalScale<Domain:Hashable, Range> {
         
         let theSteps = steps(start, step:step).map{$0 as! Range}
 
-        r = inverse ? theSteps.reverse() : theSteps
+        r = reverse ? theSteps.reverse() : theSteps
         
         return self
     }
@@ -140,6 +146,8 @@ public class OrdinalScale<Domain:Hashable, Range> {
             stop = tmp
             reverse = true
         }
+        
+        rangeExtent = ([start, stop] as [Double]).map{$0 as! Range}
         
         let step = (stop - start) / (Double(d.count) - padding + 2 * outerPadding)
         let theSteps = steps(start + step * outerPadding, step:step).map{$0 as! Range}
@@ -161,6 +169,8 @@ public class OrdinalScale<Domain:Hashable, Range> {
             stop = tmp
             reverse = true
         }
+        
+        rangeExtent = ([start, stop] as [Double]).map{$0 as! Range}
         
         let step = floor((stop - start) / (Double(d.count) - padding + 2 * outerPadding))
         
