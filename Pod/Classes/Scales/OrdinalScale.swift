@@ -18,6 +18,7 @@ enum OrdinalScaleRangeType {
     case RANGE_POINTS
     case RANGE_ROUND_POINTS
     case RANGE_BANDS
+    case RANGE_ROUND_BANDS
 }
 
 public class OrdinalScale<Domain:Hashable, Range> {
@@ -145,6 +146,29 @@ public class OrdinalScale<Domain:Hashable, Range> {
         r = reverse ? theSteps.reverse() : theSteps
         
         rangeBand = step * (1 - padding);
+        
+        return self
+    }
+    
+    public func rangeRoundBands(var start start:Double, var stop:Double, padding:Double = 0, outerPadding:Double = 0) throws -> OrdinalScale<Domain, Range> {
+        rangeType = .RANGE_ROUND_BANDS
+
+        var reverse = false
+        
+        if start > stop {
+            let tmp = start
+            start = stop
+            stop = tmp
+            reverse = true
+        }
+        
+        let step = floor((stop - start) / (Double(d.count) - padding + 2 * outerPadding))
+        
+        let theSteps = steps(start + round((stop - start - (Double(d.count) - padding) * step) / 2), step:step).map{$0 as! Range}
+        
+        r = reverse ? theSteps.reverse() : theSteps
+        
+        rangeBand = round(step * (1 - padding))
         
         return self
     }
